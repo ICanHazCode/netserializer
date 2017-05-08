@@ -11,18 +11,32 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrimitiveTest", "PrimitiveT
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		netcore-Debug|Any CPU = netcore-Debug|Any CPU
+		netcore-Release|Any CPU = netcore-Release|Any CPU
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{85A11D07-8D18-42D5-ACCF-EF9744EFE825}.netcore-Debug|Any CPU.ActiveCfg = netcore-Debug|Any CPU
+		{85A11D07-8D18-42D5-ACCF-EF9744EFE825}.netcore-Debug|Any CPU.Build.0 = netcore-Debug|Any CPU
+		{85A11D07-8D18-42D5-ACCF-EF9744EFE825}.netcore-Release|Any CPU.ActiveCfg = netcore-Release|Any CPU
+		{85A11D07-8D18-42D5-ACCF-EF9744EFE825}.netcore-Release|Any CPU.Build.0 = netcore-Release|Any CPU
 		{85A11D07-8D18-42D5-ACCF-EF9744EFE825}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{85A11D07-8D18-42D5-ACCF-EF9744EFE825}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{85A11D07-8D18-42D5-ACCF-EF9744EFE825}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{85A11D07-8D18-42D5-ACCF-EF9744EFE825}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD1A3698-ED72-49C8-874F-F721EA8012B6}.netcore-Debug|Any CPU.ActiveCfg = netcore-Debug|Any CPU
+		{DD1A3698-ED72-49C8-874F-F721EA8012B6}.netcore-Debug|Any CPU.Build.0 = netcore-Debug|Any CPU
+		{DD1A3698-ED72-49C8-874F-F721EA8012B6}.netcore-Release|Any CPU.ActiveCfg = netcore-Release|Any CPU
+		{DD1A3698-ED72-49C8-874F-F721EA8012B6}.netcore-Release|Any CPU.Build.0 = netcore-Release|Any CPU
 		{DD1A3698-ED72-49C8-874F-F721EA8012B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DD1A3698-ED72-49C8-874F-F721EA8012B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DD1A3698-ED72-49C8-874F-F721EA8012B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DD1A3698-ED72-49C8-874F-F721EA8012B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CBA6D818-4B6A-4A80-95D5-7F5EC3FBB3C4}.netcore-Debug|Any CPU.ActiveCfg = netcore-Debug|Any CPU
+		{CBA6D818-4B6A-4A80-95D5-7F5EC3FBB3C4}.netcore-Debug|Any CPU.Build.0 = netcore-Debug|Any CPU
+		{CBA6D818-4B6A-4A80-95D5-7F5EC3FBB3C4}.netcore-Release|Any CPU.ActiveCfg = netcore-Release|Any CPU
+		{CBA6D818-4B6A-4A80-95D5-7F5EC3FBB3C4}.netcore-Release|Any CPU.Build.0 = netcore-Release|Any CPU
 		{CBA6D818-4B6A-4A80-95D5-7F5EC3FBB3C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CBA6D818-4B6A-4A80-95D5-7F5EC3FBB3C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CBA6D818-4B6A-4A80-95D5-7F5EC3FBB3C4}.Release|Any CPU.ActiveCfg = Release|Any CPU

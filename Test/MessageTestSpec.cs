@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 
 namespace Test
 {
@@ -26,8 +27,8 @@ namespace Test
 
 			if (creator == null)
 			{
-				var method = typeof(T).GetMethod("Create", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public);
-				creator = (Func<MyRandom, T>)Delegate.CreateDelegate(typeof(Func<MyRandom, T>), method);
+				var method = typeof(T).GetTypeInfo().GetMethod("Create", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public);
+				creator = (Func<MyRandom, T>)method.CreateDelegate(typeof(Func<MyRandom, T>));
 			}
 
 			m_creator = creator;
@@ -36,7 +37,9 @@ namespace Test
 			{
 				var method = typeof(T).GetMethod("Compare", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public);
 				if (method != null)
-					comparer = (Action<T, T>)Delegate.CreateDelegate(typeof(Action<T, T>), method);
+				{
+					comparer = (Action<T, T>)method.CreateDelegate(typeof(Action<T, T>));
+				}
 			}
 
 			m_comparer = comparer;

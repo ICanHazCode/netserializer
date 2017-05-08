@@ -428,7 +428,7 @@ namespace NetSerializer
 				var sts = (IStaticTypeSerializer)serializer;
 
 				writer = sts.GetStaticWriter(type);
-
+				
 				Debug.Assert(writer != null);
 			}
 			else if (serializer is IDynamicTypeSerializer)

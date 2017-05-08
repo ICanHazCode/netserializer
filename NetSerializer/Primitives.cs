@@ -442,7 +442,7 @@ namespace NetSerializer
 			int totalChars = value.Length;
 			int totalBytes;
 
-#if DNXCORE50
+#if NETCOREAPP1_1
             // TODO: .NET Core 1.1 does not yet support the pointer overload of 'Encoder.GetByteCount()'
             totalBytes = encoder.GetByteCount(value.ToCharArray(), 0, totalChars, true);
 #else
@@ -461,9 +461,9 @@ namespace NetSerializer
 				int charsConverted;
 				int bytesConverted;
 
-#if DNXCORE50
-                // TODO: .NET Core 1.1 does not yet support the pointer overload of 'Encoder.Convert()'
-                encoder.Convert(value.ToCharArray(), 0, totalChars - p, buf, 0, buf.Length, true,
+#if NETCOREAPP1_1
+				// TODO: .NET Core 1.1 does not yet support the pointer overload of 'Encoder.Convert()'
+				encoder.Convert(value.ToCharArray(), 0, totalChars - p, buf, 0, buf.Length, true,
 					out charsConverted, out bytesConverted, out completed);
 #else
                 fixed (char* src = value)

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using NS = NetSerializer;
 using PB = ProtoBuf;
+using System.Reflection;
 
 namespace Test
 {
@@ -81,10 +82,9 @@ namespace Test
 			if (direct)
 				return false;
 
-			if (type.IsPrimitive || type == typeof(Guid))
+			if (type.GetTypeInfo().IsPrimitive || type == typeof(Guid))
 				return true;
-
-			return type.GetCustomAttributes(typeof(PB.ProtoContractAttribute), false).Any();
+			return type.GetTypeInfo().GetCustomAttributes(typeof(PB.ProtoContractAttribute), false).Any();
 		}
 
 		public void Warmup<T>(T[] msgs)

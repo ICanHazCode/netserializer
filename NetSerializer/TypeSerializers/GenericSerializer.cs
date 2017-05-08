@@ -21,8 +21,8 @@ namespace NetSerializer
 	{
 		public bool Handles(Serializer serializer, Type type)
 		{
-            // .NET Core does not include the SerializableAttribute
-#if !DNXCORE50
+			// .NET Core does not include the SerializableAttribute
+#if !NETCOREAPP1_1
 		    if (serializer.Settings.SupportISerializableAttribute)
 		    {
 		        if (!type.IsSerializable)
@@ -33,7 +33,7 @@ namespace NetSerializer
 		                type.FullName));
 		    }
 #endif
-            return true;
+			return true;
 		}
 
 		public IEnumerable<Type> GetSubtypes(Type type)
@@ -62,8 +62,8 @@ namespace NetSerializer
 			}
 		}
 
-#if !DNXCORE50
-        static void EmitCallToSerializingCallback(Type type, ILGenerator il, MethodInfo method)
+#if !NETCOREAPP1_1
+		static void EmitCallToSerializingCallback(Type type, ILGenerator il, MethodInfo method)
 		{
 			if (type.GetTypeInfo().IsValueType)
 				throw new NotImplementedException("Serialization callbacks not supported for Value types");
@@ -101,11 +101,11 @@ namespace NetSerializer
 
         public void GenerateWriterMethod(Serializer serializer, Type type, ILGenerator il)
 		{
-            // arg0: Serializer, arg1: Stream, arg2: value
+			// arg0: Serializer, arg1: Stream, arg2: value
 
-            // .NET Core does not provide the serialization callbacks
-#if !DNXCORE50
-            if (serializer.Settings.SupportSerializationCallbacks)
+			// .NET Core does not provide the serialization callbacks
+#if !NETCOREAPP1_1
+			if (serializer.Settings.SupportSerializationCallbacks)
 			{
 				foreach (var m in GetMethodsWithAttributes(type, typeof(System.Runtime.Serialization.OnSerializingAttribute)))
 					EmitCallToSerializingCallback(type, il, m);
@@ -135,7 +135,7 @@ namespace NetSerializer
 				il.Emit(OpCodes.Call, data.WriterMethodInfo);
 			}
 
-#if !DNXCORE50
+#if !NETCOREAPP1_1
             if (serializer.Settings.SupportSerializationCallbacks)
 			{
 				foreach (var m in GetMethodsWithAttributes(type, typeof(System.Runtime.Serialization.OnSerializedAttribute)))
@@ -156,7 +156,7 @@ namespace NetSerializer
 				il.Emit(OpCodes.Ldarg_2);
 
 				var gtfh = typeof(Type).GetMethod("GetTypeFromHandle", BindingFlags.Public | BindingFlags.Static);
-#if !DNXCORE50
+#if !NETCOREAPP1_1
                 var guo = typeof(System.Runtime.Serialization.FormatterServices).GetMethod("GetUninitializedObject", BindingFlags.Public | BindingFlags.Static);
 #else
                 var guo = typeof(System.Runtime.CompilerServices.RuntimeHelpers).GetMethod("GetUninitializedObject", BindingFlags.Public | BindingFlags.Static);
@@ -169,7 +169,7 @@ namespace NetSerializer
 				il.Emit(OpCodes.Stind_Ref);
 			}
 
-#if !DNXCORE50
+#if !NETCOREAPP1_1
             if (serializer.Settings.SupportSerializationCallbacks)
 			{
 				foreach (var m in GetMethodsWithAttributes(type, typeof(System.Runtime.Serialization.OnDeserializingAttribute)))
@@ -197,7 +197,7 @@ namespace NetSerializer
 				il.Emit(OpCodes.Call, data.ReaderMethodInfo);
 			}
 
-#if !DNXCORE50
+#if !NETCOREAPP1_1
             if (serializer.Settings.SupportSerializationCallbacks)
 			{
 				foreach (var m in GetMethodsWithAttributes(type, typeof(System.Runtime.Serialization.OnDeserializedAttribute)))

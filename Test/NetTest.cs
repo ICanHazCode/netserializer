@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Net.Sockets;
 using System.Net;
 using System.Diagnostics;
@@ -64,7 +65,7 @@ namespace Test
 			m_loops = loops;
 			m_direct = direct;
 
-			Thread.MemoryBarrier();
+			Interlocked.MemoryBarrier();
 
 			m_ev.Set();
 
@@ -78,8 +79,9 @@ namespace Test
 
 		void ServerMain()
 		{
-			var c = m_listener.AcceptTcpClient();
-
+			var t = m_listener.AcceptTcpClientAsync();// TcpClientAsync();
+			t.Wait();
+			TcpClient c = t.Result;
 			m_ev.WaitOne();
 
 			using (var stream = c.GetStream())
@@ -98,8 +100,7 @@ namespace Test
 		void ClientMain()
 		{
 			var c = new TcpClient();
-			c.Connect(IPAddress.Loopback, m_port);
-
+			c.ConnectAsync(IPAddress.Loopback, m_port).Wait();
 			m_ev.WaitOne();
 
 			using (var netStream = c.GetStream())
@@ -114,7 +115,7 @@ namespace Test
 				}
 			}
 
-			c.Close();
+			//c.Close();
 		}
 	}
 }

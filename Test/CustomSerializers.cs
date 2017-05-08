@@ -22,16 +22,32 @@ namespace Test
 
 		public MethodInfo GetStaticWriter(Type type)
 		{
-			return typeof(TriDimArrayCustomSerializer).GetMethod("WritePrimitive",
-				BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.ExactBinding, null,
-				new Type[] { typeof(Stream), type }, null);
+			//Ugly hack to work with reduced API Surface in NETCore
+			var mi =  typeof(TriDimArrayCustomSerializer).GetMethods(BindingFlags.Static | BindingFlags.NonPublic);
+			for(int i = 0; i < mi.Length;i++)
+			{
+				if (mi[i].Name == "WritePrimitive")
+					return mi[i];
+			}
+			return null;
+			//return typeof(TriDimArrayCustomSerializer).GetMethod("WritePrimitive",
+			//	BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.ExactBinding, null,
+			//	new Type[] { typeof(Stream), type }, null);
 		}
 
 		public MethodInfo GetStaticReader(Type type)
 		{
-			return typeof(TriDimArrayCustomSerializer).GetMethod("ReadPrimitive",
-				BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.ExactBinding, null,
-				new Type[] { typeof(Stream), type.MakeByRefType() }, null);
+			//Ugly hack to work with reduced API Surface in NETCore
+			var mi = typeof(TriDimArrayCustomSerializer).GetMethods(BindingFlags.Static | BindingFlags.NonPublic);
+			for (int i = 0; i < mi.Length; i++)
+			{
+				if (mi[i].Name == "ReadPrimitive")
+					return mi[i];
+			}
+			return null;
+			//return typeof(TriDimArrayCustomSerializer).GetMethod("ReadPrimitive",
+			//	//BindingFlags.Static | BindingFlags.NonPublic /* | BindingFlags.ExactBinding */, null,
+			//	new Type[] { typeof(Stream), type.MakeByRefType() }); //, null);
 		}
 
 		static void WritePrimitive(Stream stream, int[,,] value)
