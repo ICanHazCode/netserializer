@@ -1,17 +1,17 @@
 # .NET Core port notes of NetSerialization
-By Joannes Vermorel, August 2016
+By Joannes Vermorel, August 2016  
 Updated to .NETCore 1.1, May 2017
 
 ## Compile flags
 
 The .NET 3.5/4.0 frameworks and .NET Core have compatibility issues.
 Each different supported framework has their own flag:
-> NET35
-> NET40
-> NET45
-> NET452
-> NET46
-> NET462
+> NET35  
+> NET40  
+> NET45  
+> NET452  
+> NET46  
+> NET462  
 > NETCOREAPP1_1
 
 ## `ISerializable` in .NET Core is in a reference package
