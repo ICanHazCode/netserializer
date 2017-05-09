@@ -27,7 +27,7 @@ NetSerializer supports serializing the following types:
 - With client-server, both client and server must set up the NetSerializer in
   the same way, providing the same types (and type IDs).
 
-## Usage (.NET 4.x)
+## Usage (.NET 3.5 and .NET 4.x)
 
 The types to be serialized need to be marked with the standard
 `[Serializable]`. You can also use `[NonSerialized]` for fields you don't
@@ -54,10 +54,8 @@ which is somewhat complex and only recommended if absolutely needed.
 
 ## Usage (.NET Core)
 
-The `SerializableAttribute` is no more. Thus, under .NET Core, `NetSerializer`
-treats all classes as serializable by default. The setting 
-`Settings.SupportISerializable` is available in .NET 4.x to adjust the behavior
-to be the same in .NET Core.
+The `SerializableAttribute` is now in `System.Runtime.Serialization.Formatters` package.
+Be sure to reference that package to use the `SerializableAttribute`.
 
 ## Example
 

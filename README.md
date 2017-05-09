@@ -8,18 +8,18 @@ The main pros of NetSerializer are:
 - Excellent for network serialization
 - Supports classes, structs, enums, interfaces, abstract classes
 - No versioning or other extra information is serialized, only what is strictly needed
-- No type IDs for primitive types, structs or sealed classes, so less data to be sent
-- No dynamic type lookup for primitive types, structs or sealed classes, so
+- No type IDs for primitive types, structs, or sealed classes so less data is sent
+- No dynamic type lookup for primitive types, structs, or sealed classes so
   deserialization is faster
-- No extra attributes needed (like DataContract/Member), just add the standard
+- No extra attributes needed (like DataContract/Member): just add the standard
   [Serializable] or even no attribute at all.
 - Thread safe without locks
-- The data is written to the stream and read from the stream directly, without
+- The data is written to and read from the stream directly, without
   the need for temporary buffers
 
 The simpleness of NetSerializer has a drawback which must be considered by the
 user: no versioning or other meta information is sent, which means that the
-sender and the receiver have to have the same versions of the types being
+sender and the receiver **_must_** have the same versions of the types being
 serialized.
 
 This means that it's a bad idea to save the serialized data for longer periods
@@ -46,10 +46,10 @@ See [NETCore Porting info](NETCore.md) page.
 If you feel NetSerializer is a great piece of software and the author deserves
 some beer money, you can donate with bitcoin.
 
-###Original Author's Bitcoin address
-Bitcoin: 13YgwAye9Uz85xzjZXV4Son9uA6Kwy1ZAa
+##### Original Author's Bitcoin address
+[[tomba/netserializer](https://github.com/tomba/netserializer)] Bitcoin: 13YgwAye9Uz85xzjZXV4Son9uA6Kwy1ZAa
 
-I (ICanHazCode?) don't have a way for you to donate, but:
+**_I (ICanHazCode?) don't have a way for you to donate, but:_**
 
 If you don't have bitcoins or don't want to donate money, you can also just
 send an email telling me what you think of NetSerializer and how you use it.

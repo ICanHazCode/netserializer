@@ -28,13 +28,21 @@ namespace NetSerializer
 				.Where(fi => (fi.Attributes & FieldAttributes.NotSerialized) == 0)
 				.OrderBy(f => f.Name, StringComparer.Ordinal);
 
+#if !NET35 && !NET40
 			if (type.GetTypeInfo().BaseType == null)
+#else
+			if(type.BaseType == null)
+#endif
 			{
 				return fields;
 			}
 			else
 			{
+#if !NET35 && !NET40
 				var baseFields = GetFieldInfos(type.GetTypeInfo().BaseType);
+#else
+				var baseFields = GetFieldInfos(type.BaseType);
+#endif
 				return baseFields.Concat(fields);
 			}
 		}
@@ -110,10 +118,14 @@ namespace NetSerializer
 			{
 				var dynamicWriter = data.WriterMethodInfo as DynamicMethod;
 
-			    if (dynamicWriter != null)
-			        return dynamicWriter.CreateDelegate(delegateType);
-			    else
-			        return data.WriterMethodInfo.CreateDelegate(delegateType);
+				if (dynamicWriter != null)
+					return dynamicWriter.CreateDelegate(delegateType);
+				else
+#if !NET35 && !NET40
+					return data.WriterMethodInfo.CreateDelegate(delegateType);
+#else
+					return Delegate.CreateDelegate(delegateType, data.WriterMethodInfo);
+#endif
 			}
 
 			// Create a trampoline
@@ -127,8 +139,11 @@ namespace NetSerializer
 			il.Emit(OpCodes.Ldarg_1);
 			il.Emit(OpCodes.Ldarg_2);
 			if (needTypeConv)
+#if !NET35 && !NET40
 				il.Emit(writerType.GetTypeInfo().IsValueType ? OpCodes.Unbox_Any : OpCodes.Castclass, writerType);
-
+#else
+				il.Emit(writerType.IsValueType ? OpCodes.Unbox_Any : OpCodes.Castclass, writerType);
+#endif
 			// XXX tailcall causes slowdowns with large valuetypes
 			//il.Emit(OpCodes.Tailcall);
 			il.Emit(OpCodes.Call, data.WriterMethodInfo);
@@ -162,18 +177,26 @@ namespace NetSerializer
 			    if (dynamicReader != null)
 			        return dynamicReader.CreateDelegate(delegateType);
 			    else
-			        return data.ReaderMethodInfo.CreateDelegate(delegateType);
+#if !NET35 && !NET40
+					return data.ReaderMethodInfo.CreateDelegate(delegateType);
+#else
+					return Delegate.CreateDelegate(delegateType, data.ReaderMethodInfo);
+#endif
 			}
 
-			// Create a trampoline
+				// Create a trampoline
 
-			var wrapper = GenerateDynamicDeserializerStub(paramType);
+				var wrapper = GenerateDynamicDeserializerStub(paramType);
 			var il = wrapper.GetILGenerator();
 
 			if (needsInstanceParameter)
 				il.Emit(OpCodes.Ldarg_0);
 
+#if !NET35 && !NET40
 			if (needTypeConv && readerType.GetTypeInfo().IsValueType)
+#else
+			if(needTypeConv && readerType.IsValueType)
+#endif
 			{
 				var local = il.DeclareLocal(readerType);
 

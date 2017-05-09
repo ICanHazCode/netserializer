@@ -18,7 +18,7 @@ Forked from Lokad/netserializer with modifications for netcoreapp1.1</Descriptio
   </PropertyGroup>
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp1.1;net452</TargetFrameworks>
+    <TargetFrameworks>netcoreapp1.1;net35;net40;net45;net452;net46;net462</TargetFrameworks>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
 	  <RootNamespace>NetSerializer</RootNamespace>
 	  <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
@@ -43,7 +43,7 @@ Forked from Lokad/netserializer with modifications for netcoreapp1.1</Descriptio
     </PackageReference>
   </ItemGroup>
   
-  <ItemGroup>
+  <ItemGroup Condition=" '$(TargetFramework)' != 'net35' AND '$(TargetFramework)' != 'net40'">
     <PackageReference Include="System.Runtime.Serialization.Primitives" Version="4.3.0" />
     <PackageReference Include="System.Text.Encoding" Version="4.3.0" />
   </ItemGroup>

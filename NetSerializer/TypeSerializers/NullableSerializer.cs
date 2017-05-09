@@ -17,7 +17,11 @@ namespace NetSerializer
 	{
 		public bool Handles(Serializer serializer, Type type)
 		{
+#if !NET35 && !NET40
 			if (!type.GetTypeInfo().IsGenericType)
+#else
+			if(!type.IsGenericType)
+#endif
 				return false;
 
 			var genTypeDef = type.GetGenericTypeDefinition();

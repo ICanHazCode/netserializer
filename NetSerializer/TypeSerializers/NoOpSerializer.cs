@@ -32,7 +32,11 @@ namespace NetSerializer
 		public bool Handles(Serializer serializer, Type type)
 		{
 			if (m_handleSubclasses)
+#if !NET35 && !NET40
 				return m_types.Any(t => type.GetTypeInfo().IsSubclassOf(t));
+#else
+				return m_types.Any(t => type.IsSubclassOf(t));
+#endif
 			else
 				return m_types.Contains(type);
 		}
