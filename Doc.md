@@ -61,18 +61,22 @@ Be sure to reference that package to use the `SerializableAttribute`.
 
 Initialization:
 
-```
+```C#
 var types = YourCollectTypesMethod();
 var ser = new Serializer(types);
 ```
 
 Serializing:
 
-`ser.Serialize(stream, ob);`
+```C#
+ser.Serialize(stream, ob);
+```
 
 Deserializing:
 
-`var ob = (YourType)ser.Deserialize(stream);`
+```C#
+var ob = (YourType)ser.Deserialize(stream);
+```
 
 ## Collecting Types
 
@@ -84,7 +88,7 @@ message types inherit `MessageBase`.
 
 With this helper:
 
-```
+```C#
 IEnumerable<Type> GetSubclasses(Type type)
 {
 	return type.Assembly.GetTypes().Where(t => t.IsSubclassOf(type));
@@ -93,7 +97,7 @@ IEnumerable<Type> GetSubclasses(Type type)
 
 we can use the following code to collect all the message types:
 
-```
+```C#
 var messageTypes = GetSubclasses(typeof(MessageBase));
 var ser = new Serializer(messageTypes);
 ```
@@ -103,7 +107,7 @@ var ser = new Serializer(messageTypes);
 NetSerializer supports so called direct serialization via the following
 methods:
 
-```
+```C#
 SerializeDirect<T>()
 DeserializeDirect<T>()
 ```
