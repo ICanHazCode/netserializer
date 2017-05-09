@@ -4,6 +4,7 @@
   <PropertyGroup>
     <TargetFrameworks>netcoreapp1.1;net452</TargetFrameworks>
     <OutputType>exe</OutputType>
+    <OutputTypeEx>exe</OutputTypeEx>
   </PropertyGroup>  
 
   <!--Assembly Attributes-->
@@ -25,11 +26,6 @@
     <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
   
-  <!--Are these even needed? -->
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net452' ">
-    <None Include="app.config" />
-    <None Include="packages.config" />
-  </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'net452' ">
     <Reference Include="System" />
     <Reference Include="System.XML" />

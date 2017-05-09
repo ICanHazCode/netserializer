@@ -1,19 +1,26 @@
 # .NET Core port notes of NetSerialization
 By Joannes Vermorel, August 2016
+Updated to .NETCore 1.1, May 2017
 
-## The `DNXCORE50` compile flag
+## The `NETCOREAPP1_1` compile flag
 
 .NET Core is not fully backward compatible with .NET 4.x. Thus,
-the compile flage `DNXCORE50` has been introduce in the solution
+the compile flage `NETCOREAPP1_1` has been introduce in the solution
 to adjust the code to make it compatible with .NET Core.
 
-## `ISerializable` is no more in .NET Core
+## `ISerializable` in .NET Core is in a reference package
 
-In .NET Core, the `ISerializable` interface is no more. Actually,
-the need to flag classes with `ISerializable` was questionnable
+In .NET Core, the `ISerializable` interface, as well as the
+'SerializableAttribute' is in the System.Runtime.Serialization.Formatters package. 
+
+Actually, the need to flag classes with `ISerializable` was questionnable
 even in .NET 4.x. Thus, `ISerializable` behavior can now be avoided
-through `Settings.SupportISerializable` in .NET 4.x, and while it is
-completely ignored under .NET Core.
+through `Settings.SupportISerializable` in .NET 4.x.
+
+## '(De)SerializationCallback' in .NET Core is in a reference package
+
+In .NET Core, the ISerializable callbacks are in the
+System.Runtime.Serialization.Primitives package.
 
 ## `Encoder.GetByteCount()` and `Encoder.Convert()`
 

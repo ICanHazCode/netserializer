@@ -21,18 +21,16 @@ namespace NetSerializer
 	{
 		public bool Handles(Serializer serializer, Type type)
 		{
-			// .NET Core does not include the SerializableAttribute
-#if !NETCOREAPP1_1
-		    if (serializer.Settings.SupportISerializableAttribute)
+			// .NET Core does include the SerializableAttribute in System.Runtime.Serialization.Formatters
+			if (serializer.Settings.SupportISerializableAttribute)
 		    {
-		        if (!type.IsSerializable)
+		        if (!type.GetTypeInfo().IsSerializable)
 		            throw new NotSupportedException(String.Format("Type {0} is not marked as Serializable", type.FullName));
 
 		        if (typeof(System.Runtime.Serialization.ISerializable).IsAssignableFrom(type))
 		            throw new NotSupportedException(String.Format("Cannot serialize {0}: ISerializable not supported",
 		                type.FullName));
 		    }
-#endif
 			return true;
 		}
 
@@ -62,7 +60,6 @@ namespace NetSerializer
 			}
 		}
 
-#if !NETCOREAPP1_1
 		static void EmitCallToSerializingCallback(Type type, ILGenerator il, MethodInfo method)
 		{
 			if (type.GetTypeInfo().IsValueType)
@@ -97,20 +94,17 @@ namespace NetSerializer
 
 			il.Emit(OpCodes.Call, method);
 		}
-#endif
 
         public void GenerateWriterMethod(Serializer serializer, Type type, ILGenerator il)
 		{
 			// arg0: Serializer, arg1: Stream, arg2: value
 
 			// .NET Core does not provide the serialization callbacks
-#if !NETCOREAPP1_1
 			if (serializer.Settings.SupportSerializationCallbacks)
 			{
 				foreach (var m in GetMethodsWithAttributes(type, typeof(System.Runtime.Serialization.OnSerializingAttribute)))
 					EmitCallToSerializingCallback(type, il, m);
 			}
-#endif
 
             var fields = Helpers.GetFieldInfos(type);
 
@@ -135,13 +129,11 @@ namespace NetSerializer
 				il.Emit(OpCodes.Call, data.WriterMethodInfo);
 			}
 
-#if !NETCOREAPP1_1
             if (serializer.Settings.SupportSerializationCallbacks)
 			{
 				foreach (var m in GetMethodsWithAttributes(type, typeof(System.Runtime.Serialization.OnSerializedAttribute)))
 					EmitCallToSerializingCallback(type, il, m);
 			}
-#endif
 
 			il.Emit(OpCodes.Ret);
 		}
@@ -169,13 +161,11 @@ namespace NetSerializer
 				il.Emit(OpCodes.Stind_Ref);
 			}
 
-#if !NETCOREAPP1_1
             if (serializer.Settings.SupportSerializationCallbacks)
 			{
 				foreach (var m in GetMethodsWithAttributes(type, typeof(System.Runtime.Serialization.OnDeserializingAttribute)))
 					EmitCallToDeserializingCallback(type, il, m);
 			}
-#endif
 
 			var fields = Helpers.GetFieldInfos(type);
 
@@ -197,7 +187,6 @@ namespace NetSerializer
 				il.Emit(OpCodes.Call, data.ReaderMethodInfo);
 			}
 
-#if !NETCOREAPP1_1
             if (serializer.Settings.SupportSerializationCallbacks)
 			{
 				foreach (var m in GetMethodsWithAttributes(type, typeof(System.Runtime.Serialization.OnDeserializedAttribute)))
@@ -223,7 +212,6 @@ namespace NetSerializer
 					il.Emit(OpCodes.Callvirt, miOnDeserialization);
 				}
 			}
-#endif
 
 			il.Emit(OpCodes.Ret);
 		}

@@ -2,6 +2,7 @@
   <PropertyGroup>
     <TargetFrameworks>netcoreapp1.1;net452</TargetFrameworks>
     <OutputType>exe</OutputType>
+    <OutputTypeEx>exe</OutputTypeEx>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -21,11 +22,6 @@
     <Optimize>true</Optimize>
     <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
-
-  <!--Is this even needed? -->  
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net452' ">
-    <None Include="app.config" />
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\NetSerializer\NetSerializer.csproj" />

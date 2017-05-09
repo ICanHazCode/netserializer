@@ -21,7 +21,6 @@ namespace NetSerializer
         // .NET Core does not provide ISerializableAttribute nor serialization callbacks
         public bool SupportISerializableAttribute = true;
 
-#if !NETCOREAPP1_1
         /// <summary>
         /// Support IDeserializationCallback
         /// </summary>
@@ -31,6 +30,5 @@ namespace NetSerializer
 		/// Support OnSerializing, OnSerialized, OnDeserializing, OnDeserialized attributes
 		/// </summary>
 		public bool SupportSerializationCallbacks = false;
-#endif
     }
 }
