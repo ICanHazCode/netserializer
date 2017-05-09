@@ -11,22 +11,22 @@ dataset. NetSerializer can also serialize types directly, without writing any
 meta information or boxing of value types. These tests are marked with
 "(direct)".
 
-The table lists the time it takes run the test, the number of GC collections
+The table lists the time it takes to run the test, the number of GC collections
 (per generation) that happened during the test, and the size of the
-outputted serialized data (when available).
+serialized data output (when available).
 
 There are three tests:
 
 - MemStream Serialize - serializes an array of objects to a memory stream.
 
-- MemStream Deserialize - deserializes the stream created with MemStream
+- MemStream Deserialize - deserializes the stream created with the MemStream
   Serialize test.
 
-- NetTest - uses two threads, of which the first one serializes objects and
-  sends them over a local socket, and the second one receive the data and
-  deserialize the objects. Note that the size is not available for NetTest, as
+- NetTest - uses two threads: the first one serializes objects and
+  sends them over a local socket, and the second one receives the data and
+  deserializes the objects. Note that the size is not available for NetTest, as
   tracking the sent data is not trivial. However, the dataset is the same as
-  with MemStream, an so is the size of the data.
+  with MemStream, and so is the size of the data.
 
 The details of the tests can be found from the source code. The tests were run
 on a 64bit Windows 10 laptop.

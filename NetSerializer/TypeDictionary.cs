@@ -53,13 +53,20 @@ namespace NetSerializer
 
 		public bool TryGetValue(Type key, out TypeData value)
 		{
+#if !NET35 && !NET40
 			var buckets = Volatile.Read(ref m_buckets);
-
+#else
+			var buckets = Read(ref m_buckets);
+#endif
 			int idx = Hash(key, buckets.Length);
 
+#if !NET35 && !NET40
 			Pair[] arr = Volatile.Read(ref buckets[idx]);
-			if (arr == null)
-				goto not_found;
+#else
+			Pair[] arr = Read(ref buckets[idx]);
+#endif
+			if(arr == null)
+			goto not_found;
 
 			for (int i = 0; i < arr.Length; ++i)
 			{
@@ -79,11 +86,18 @@ namespace NetSerializer
 		{
 			get
 			{
-				var buckets = Volatile.Read(ref m_buckets);
-
+#if !NET35 && !NET40
+			var buckets = Volatile.Read(ref m_buckets);
+#else
+				var buckets = Read(ref m_buckets);
+#endif
 				int idx = Hash(key, buckets.Length);
 
-				Pair[] arr = Volatile.Read(ref buckets[idx]);
+#if !NET35 && !NET40
+			Pair[] arr = Volatile.Read(ref buckets[idx]);
+#else
+				Pair[] arr = Read(ref buckets[idx]);
+#endif
 				if (arr == null)
 					throw new KeyNotFoundException(String.Format("Type not found {0}", key));
 
@@ -112,7 +126,11 @@ namespace NetSerializer
 								Add(newBuckets, pair.Key, pair.Value);
 						}
 
+#if !NET35 && !NET40
 						Volatile.Write(ref m_buckets, newBuckets);
+#else
+						Write(ref m_buckets, newBuckets);
+#endif
 					}
 
 					Add(m_buckets, key, value);
@@ -198,5 +216,32 @@ namespace NetSerializer
 			foreach (var kvp in countmap.OrderBy(kvp => kvp.Key))
 				Console.WriteLine("{0}: {1}", kvp.Key, kvp.Value);
 		}
+#if NET35 || NET40
+		[System.Runtime.ConstrainedExecution.ReliabilityContract(System.Runtime.ConstrainedExecution.Consistency.WillNotCorruptState, System.Runtime.ConstrainedExecution.Cer.Success), System.Security.SecuritySafeCritical, __DynamicallyInvokable]
+		private static T Read<T>(ref T location) where T : class
+		{
+			T result = location;
+			Thread.MemoryBarrier();
+			return result;
+		}
+		[System.Runtime.ConstrainedExecution.ReliabilityContract(System.Runtime.ConstrainedExecution.Consistency.WillNotCorruptState, System.Runtime.ConstrainedExecution.Cer.Success), System.Security.SecuritySafeCritical, __DynamicallyInvokable]
+		private static void Write<T>(ref T location, T value) where T : class
+		{
+			Thread.MemoryBarrier();
+			location = value;
+		}
+
+#endif
+
 	}
+#if NET35 || NET40
+	[AttributeUsage(AttributeTargets.All, Inherited = false)]
+	internal sealed class __DynamicallyInvokableAttribute : Attribute
+	{
+		// Token: 0x06006F5B RID: 28507 RVA: 0x0017B824 File Offset: 0x00179A24
+		public __DynamicallyInvokableAttribute()
+		{
+		}
+	}
+#endif
 }

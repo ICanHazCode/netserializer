@@ -19,25 +19,29 @@ namespace NetSerializer
 	{
 		public static MethodInfo GetWritePrimitive(Type type)
 		{
-            // .NET Core does not support all GetMethod() overloads
-            return typeof(Primitives).GetTypeInfo().GetMethod(
+			// .NET Core does not support all GetMethod() overloads
+#if NETCOREAPP1_1
+			return typeof(Primitives).GetTypeInfo().GetMethod(
                 "WritePrimitive", new Type[] { typeof(Stream), type });
-
-            //return typeof(Primitives).GetTypeInfo().GetMethod("WritePrimitive",
-		    //  BindingFlags.Static | BindingFlags.Public | BindingFlags.ExactBinding, null,
-			//  new Type[] { typeof(Stream), type }, null);
+#else
+            return typeof(Primitives).GetMethod("WritePrimitive",
+		      BindingFlags.Static | BindingFlags.Public | BindingFlags.ExactBinding, null,
+			  new Type[] { typeof(Stream), type }, null);
+#endif
 		}
 
 		public static MethodInfo GetReaderPrimitive(Type type)
 		{
+#if NETCOREAPP1_1
             // .NET Core does not support all GetMethod() overloads
             return typeof(Primitives).GetTypeInfo().GetMethod(
                 "ReadPrimitive", new Type[] { typeof(Stream), type.MakeByRefType() });
-
-            //return typeof(Primitives).GetTypeInfo().GetMethod("ReadPrimitive",
-            //	BindingFlags.Static | BindingFlags.Public | BindingFlags.ExactBinding, null,
-            //	new Type[] { typeof(Stream), type.MakeByRefType() }, null);
-        }
+#else
+            return typeof(Primitives).GetMethod("ReadPrimitive",
+            	BindingFlags.Static | BindingFlags.Public | BindingFlags.ExactBinding, null,
+            	new Type[] { typeof(Stream), type.MakeByRefType() }, null);
+#endif
+		}
 
         static uint EncodeZigZag32(int n)
 		{

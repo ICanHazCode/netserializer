@@ -77,12 +77,19 @@ namespace NetSerializer
 
 				var type = this.Type;
 
+#if !NET35 && !NET40
 				if (type.GetTypeInfo().IsValueType || type.IsArray)
 					return true;
 
 				if (type.GetTypeInfo().IsSealed && (this.TypeSerializer is IStaticTypeSerializer))
 					return true;
+#else
+				if (type.IsValueType || type.IsArray)
+					return true;
 
+				if (type.IsSealed && (this.TypeSerializer is IStaticTypeSerializer))
+					return true;
+#endif
 				return false;
 			}
 		}

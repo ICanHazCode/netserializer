@@ -120,13 +120,19 @@ namespace NetSerializer
 
 				if (m_runtimeTypeMap.ContainsKey(type))
 					continue;
-
+#if !NET35 && !NET40
 				if (type.GetTypeInfo().IsAbstract || type.GetTypeInfo().IsInterface)
 					continue;
 
 				if (type.GetTypeInfo().ContainsGenericParameters)
 					throw new NotSupportedException(String.Format("Type {0} contains generic parameters", type.FullName));
+#else
+				if (type.IsAbstract || type.IsInterface)
+					continue;
 
+				if (type.ContainsGenericParameters)
+					throw new NotSupportedException(String.Format("Type {0} contains generic parameters", type.FullName));
+#endif
 				while (m_runtimeTypeIDList.ContainsTypeID(m_nextAvailableTypeID))
 					m_nextAvailableTypeID++;
 
@@ -175,13 +181,19 @@ namespace NetSerializer
 
 				if (m_runtimeTypeIDList.ContainsTypeID(typeID))
 					throw new ArgumentException(String.Format("Type with typeID {0} already added", typeID));
-
+#if !NET35 && !NET40
 				if (type.GetTypeInfo().IsAbstract || type.GetTypeInfo().IsInterface)
 					throw new ArgumentException(String.Format("Type {0} is abstract or interface", type.FullName));
 
 				if (type.GetTypeInfo().ContainsGenericParameters)
 					throw new NotSupportedException(String.Format("Type {0} contains generic parameters", type.FullName));
+#else
+				if (type.IsAbstract || type.IsInterface)
+					throw new ArgumentException(String.Format("Type {0} is abstract or interface", type.FullName));
 
+				if (type.ContainsGenericParameters)
+					throw new NotSupportedException(String.Format("Type {0} contains generic parameters", type.FullName));
+#endif
 				ITypeSerializer serializer = GetTypeSerializer(type);
 
 				var data = new TypeData(type, typeID, serializer);
@@ -264,7 +276,11 @@ namespace NetSerializer
 		[Conditional("DEBUG")]
 		void AssertLocked()
 		{
+#if !NET35 && !NET40
 			Debug.Assert(System.Threading.Monitor.IsEntered(m_modifyLock));
+#else
+			Debug.Assert(System.Threading.Monitor.TryEnter(m_modifyLock));
+#endif
 		}
 
 		public void Serialize(Stream stream, object ob)
@@ -393,11 +409,19 @@ namespace NetSerializer
 			{
 				var type = stack.Pop();
 
+#if !NET35 && !NET40
 				if (type.GetTypeInfo().IsAbstract || type.GetTypeInfo().IsInterface)
 					continue;
 
 				if (type.GetTypeInfo().ContainsGenericParameters)
 					throw new NotSupportedException(String.Format("Type {0} contains generic parameters", type.FullName));
+#else
+				if (type.IsAbstract || type.IsInterface)
+					continue;
+
+				if (type.ContainsGenericParameters)
+					throw new NotSupportedException(String.Format("Type {0} contains generic parameters", type.FullName));
+#endif
 
 				ITypeSerializer serializer = m_runtimeTypeMap[type].TypeSerializer;
 
