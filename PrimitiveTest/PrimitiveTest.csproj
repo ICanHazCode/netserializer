@@ -14,25 +14,12 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <TargetFramework>net452</TargetFramework>
-    <DefineConstants>DEBUG;TRACE;NET452</DefineConstants>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <Optimize>true</Optimize>
-    <TargetFramework>net452</TargetFramework>
-    <DefineConstants>TRACE;NET452</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='netcore-Debug|AnyCPU'">
-    <TargetFramework>netcoreapp1.1</TargetFramework>
-    <DefineConstants>DEBUG;TRACE;NETCOREAPP1_1</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='netcore-Release|AnyCPU'">
-    <Optimize>true</Optimize>
-    <TargetFramework>netcoreapp1.1</TargetFramework>
-    <DefineConstants>TRACE;NETCOREAPP1_1</DefineConstants>
+    <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
 
   <!--Is this even needed? -->  
