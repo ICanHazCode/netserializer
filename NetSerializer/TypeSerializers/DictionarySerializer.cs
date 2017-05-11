@@ -20,7 +20,11 @@ namespace NetSerializer
 	{
 		public bool Handles(Serializer serializer, Type type)
 		{
+#if !NET35 && !NET40
 			if (!type.GetTypeInfo().IsGenericType)
+#else
+			if(!type.IsGenericType)
+#endif
 				return false;
 
 			var genTypeDef = type.GetGenericTypeDefinition();
@@ -41,9 +45,15 @@ namespace NetSerializer
 
 		public MethodInfo GetStaticWriter(Type type)
 		{
+#if !NET35 && !NET40
 			Debug.Assert(type.GetTypeInfo().IsGenericType);
 
 			if (!type.GetTypeInfo().IsGenericType)
+#else
+			Debug.Assert(type.IsGenericType);
+
+			if(!type.IsGenericType)
+#endif
 				throw new Exception();
 
 			var genTypeDef = type.GetGenericTypeDefinition();
@@ -63,9 +73,15 @@ namespace NetSerializer
 
 		public MethodInfo GetStaticReader(Type type)
 		{
+#if !NET35 && !NET40
 			Debug.Assert(type.GetTypeInfo().IsGenericType);
 
 			if (!type.GetTypeInfo().IsGenericType)
+#else
+			Debug.Assert(type.IsGenericType);
+
+			if(!type.IsGenericType)
+#endif
 				throw new Exception();
 
 			var genTypeDef = type.GetGenericTypeDefinition();
@@ -100,7 +116,11 @@ namespace NetSerializer
 
 				var paramType = p[2].ParameterType;
 
+#if !NET35 && !NET40
 				if (paramType.GetTypeInfo().IsGenericType == false)
+#else
+				if(paramType.IsGenericType == false)
+#endif
 					continue;
 
 				var genParamType = paramType.GetGenericTypeDefinition();
@@ -134,7 +154,11 @@ namespace NetSerializer
 
 				paramType = paramType.GetElementType();
 
+#if !NET35 && !NET40
 				if (paramType.GetTypeInfo().IsGenericType == false)
+#else
+				if (paramType.IsGenericType == false)
+#endif
 					continue;
 
 				var genParamType = paramType.GetGenericTypeDefinition();

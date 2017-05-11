@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Net.Sockets;
 using System.Net;
 using System.Diagnostics;
 using System.IO;
+#if !NET35 && !NET40
+using System.Threading.Tasks;
+#endif
 
 namespace Test
 {
@@ -37,7 +39,11 @@ namespace Test
 		{
 			if (m_ev != null)
 			{
+#if !NET35 && !NET40
 				m_ev.Dispose();
+#else
+				m_ev.Close();
+#endif
 				m_ev = null;
 			}
 		}
@@ -65,7 +71,11 @@ namespace Test
 			m_loops = loops;
 			m_direct = direct;
 
+#if !NET35 && !NET40
 			Interlocked.MemoryBarrier();
+#else
+			Thread.MemoryBarrier();
+#endif
 
 			m_ev.Set();
 
@@ -79,9 +89,13 @@ namespace Test
 
 		void ServerMain()
 		{
+#if !NET35 && !NET40
 			var t = m_listener.AcceptTcpClientAsync();// TcpClientAsync();
 			t.Wait();
 			TcpClient c = t.Result;
+#else
+			var c = m_listener.AcceptTcpClient();
+#endif
 			m_ev.WaitOne();
 
 			using (var stream = c.GetStream())
@@ -100,7 +114,11 @@ namespace Test
 		void ClientMain()
 		{
 			var c = new TcpClient();
+#if !NET35 && !NET40
 			c.ConnectAsync(IPAddress.Loopback, m_port).Wait();
+#else
+			c.Connect(IPAddress.Loopback, m_port);
+#endif
 			m_ev.WaitOne();
 
 			using (var netStream = c.GetStream())

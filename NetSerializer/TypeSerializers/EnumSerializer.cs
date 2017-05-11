@@ -20,7 +20,11 @@ namespace NetSerializer
 	{
 		public bool Handles(Serializer serializer, Type type)
 		{
+#if !NET35 && !NET40
 			return type.GetTypeInfo().IsEnum;
+#else
+			return type.IsEnum;
+#endif
 		}
 
 		public IEnumerable<Type> GetSubtypes(Type type)
@@ -32,8 +36,11 @@ namespace NetSerializer
 
 		public MethodInfo GetStaticWriter(Type type)
 		{
+#if !NET35 && !NET40
 			Debug.Assert(type.GetTypeInfo().IsEnum);
-
+#else
+			Debug.Assert(type.IsEnum);
+#endif
 			var underlyingType = Enum.GetUnderlyingType(type);
 
 			return Primitives.GetWritePrimitive(underlyingType);
@@ -41,8 +48,11 @@ namespace NetSerializer
 
 		public MethodInfo GetStaticReader(Type type)
 		{
+#if !NET35 && !NET40
 			Debug.Assert(type.GetTypeInfo().IsEnum);
-
+#else
+			Debug.Assert(type.IsEnum);
+#endif
 			var underlyingType = Enum.GetUnderlyingType(type);
 
 			return Primitives.GetReaderPrimitive(underlyingType);

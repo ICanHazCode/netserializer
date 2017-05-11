@@ -27,7 +27,7 @@ NetSerializer supports serializing the following types:
 - With client-server, both client and server must set up the NetSerializer in
   the same way, providing the same types (and type IDs).
 
-## Usage (.NET 4.x)
+## Usage (.NET 3.5 and .NET 4.x)
 
 The types to be serialized need to be marked with the standard
 `[Serializable]`. You can also use `[NonSerialized]` for fields you don't
@@ -54,27 +54,29 @@ which is somewhat complex and only recommended if absolutely needed.
 
 ## Usage (.NET Core)
 
-The `SerializableAttribute` is no more. Thus, under .NET Core, `NetSerializer`
-treats all classes as serializable by default. The setting 
-`Settings.SupportISerializable` is available in .NET 4.x to adjust the behavior
-to be the same in .NET Core.
+The `SerializableAttribute` is now in `System.Runtime.Serialization.Formatters` package.
+Be sure to reference that package to use the `SerializableAttribute`.
 
 ## Example
 
 Initialization:
 
-```
+```C#
 var types = YourCollectTypesMethod();
 var ser = new Serializer(types);
 ```
 
 Serializing:
 
-`ser.Serialize(stream, ob);`
+```C#
+ser.Serialize(stream, ob);
+```
 
 Deserializing:
 
-`var ob = (YourType)ser.Deserialize(stream);`
+```C#
+var ob = (YourType)ser.Deserialize(stream);
+```
 
 ## Collecting Types
 
@@ -86,7 +88,7 @@ message types inherit `MessageBase`.
 
 With this helper:
 
-```
+```C#
 IEnumerable<Type> GetSubclasses(Type type)
 {
 	return type.Assembly.GetTypes().Where(t => t.IsSubclassOf(type));
@@ -95,7 +97,7 @@ IEnumerable<Type> GetSubclasses(Type type)
 
 we can use the following code to collect all the message types:
 
-```
+```C#
 var messageTypes = GetSubclasses(typeof(MessageBase));
 var ser = new Serializer(messageTypes);
 ```
@@ -105,7 +107,7 @@ var ser = new Serializer(messageTypes);
 NetSerializer supports so called direct serialization via the following
 methods:
 
-```
+```C#
 SerializeDirect<T>()
 DeserializeDirect<T>()
 ```
@@ -159,6 +161,6 @@ Issue #39 tracks this.
 ## Known Issues
 
 - Mono issue with CultureInfo: [Issue #38](https://github.com/tomba/netserializer/pull/38),
-  [Mono pull req](https://github.com/mono/mono/pull/2942)
+  [Mono pull req](https://github.com/mono/mono/pull/2942)(Seems to be fixed in Mono)
 - String serialization on CentOS 6:
-  [Issue #55](https://github.com/tomba/netserializer/pull/55)
+  [Issue #55](https://github.com/tomba/netserializer/pull/55)(Seems to be an issue in CentOS 6:can't find, is it fixed?)

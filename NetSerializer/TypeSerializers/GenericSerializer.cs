@@ -24,8 +24,12 @@ namespace NetSerializer
 			// .NET Core does include the SerializableAttribute in System.Runtime.Serialization.Formatters
 			if (serializer.Settings.SupportISerializableAttribute)
 		    {
+#if !NET35 && !NET40
 		        if (!type.GetTypeInfo().IsSerializable)
-		            throw new NotSupportedException(String.Format("Type {0} is not marked as Serializable", type.FullName));
+#else
+				if(!type.IsSerializable)
+#endif
+					throw new NotSupportedException(String.Format("Type {0} is not marked as Serializable", type.FullName));
 
 		        if (typeof(System.Runtime.Serialization.ISerializable).IsAssignableFrom(type))
 		            throw new NotSupportedException(String.Format("Cannot serialize {0}: ISerializable not supported",
@@ -49,23 +53,38 @@ namespace NetSerializer
 			var methods = type.GetMethods(flags)
 				.Where(m => m.GetCustomAttributes(attrType, false).Any());
 
+#if !NET35 && !NET40
 			if (type.GetTypeInfo().BaseType == null)
+#else
+			if(type.BaseType == null)
+#endif
 			{
 				return methods;
 			}
 			else
 			{
+#if !NET35 && !NET40
 				var baseMethods = GetMethodsWithAttributes(type.GetTypeInfo().BaseType, attrType);
+#else
+				var baseMethods = GetMethodsWithAttributes(type.BaseType, attrType);
+#endif
 				return baseMethods.Concat(methods);
 			}
 		}
 
 		static void EmitCallToSerializingCallback(Type type, ILGenerator il, MethodInfo method)
 		{
+#if !NET35 && !NET40
 			if (type.GetTypeInfo().IsValueType)
 				throw new NotImplementedException("Serialization callbacks not supported for Value types");
 
 			if (type.GetTypeInfo().IsValueType)
+#else
+			if (type.IsValueType)
+				throw new NotImplementedException("Serialization callbacks not supported for Value types");
+
+			if (type.IsValueType)
+#endif
 				il.Emit(OpCodes.Ldarga_S, 2);
 			else
 				il.Emit(OpCodes.Ldarg_2);
@@ -80,14 +99,22 @@ namespace NetSerializer
 
 		static void EmitCallToDeserializingCallback(Type type, ILGenerator il, MethodInfo method)
 		{
+#if !NET35 && !NET40
 			if (type.GetTypeInfo().IsValueType)
 				throw new NotImplementedException("Serialization callbacks not supported for Value types");
 
 			il.Emit(OpCodes.Ldarg_2);
 			if (type.GetTypeInfo().IsClass)
+#else
+			if (type.IsValueType)
+				throw new NotImplementedException("Serialization callbacks not supported for Value types");
+
+			il.Emit(OpCodes.Ldarg_2);
+			if (type.IsClass)
+#endif
 				il.Emit(OpCodes.Ldind_Ref);
 
-			var ctxLocal = il.DeclareLocal(typeof(System.Runtime.Serialization.StreamingContext));
+				var ctxLocal = il.DeclareLocal(typeof(System.Runtime.Serialization.StreamingContext));
 			il.Emit(OpCodes.Ldloca_S, ctxLocal);
 			il.Emit(OpCodes.Initobj, typeof(System.Runtime.Serialization.StreamingContext));
 			il.Emit(OpCodes.Ldloc_S, ctxLocal);
@@ -120,7 +147,11 @@ namespace NetSerializer
 					il.Emit(OpCodes.Ldarg_0);
 
 				il.Emit(OpCodes.Ldarg_1);
+#if !NET35 && !NET40
 				if (type.GetTypeInfo().IsValueType)
+#else
+				if(type.IsValueType)
+#endif
 					il.Emit(OpCodes.Ldarga_S, 2);
 				else
 					il.Emit(OpCodes.Ldarg_2);
@@ -142,7 +173,11 @@ namespace NetSerializer
 		{
 			// arg0: Serializer, arg1: stream, arg2: out value
 
+#if !NET35 && !NET40
 			if (type.GetTypeInfo().IsClass)
+#else
+			if(type.IsClass)
+#endif
 			{
 				// instantiate empty class
 				il.Emit(OpCodes.Ldarg_2);
@@ -180,7 +215,11 @@ namespace NetSerializer
 
 				il.Emit(OpCodes.Ldarg_1);
 				il.Emit(OpCodes.Ldarg_2);
+#if !NET35 && !NET40
 				if (type.GetTypeInfo().IsClass)
+#else
+				if(type.IsClass)
+#endif
 					il.Emit(OpCodes.Ldind_Ref);
 				il.Emit(OpCodes.Ldflda, field);
 
@@ -197,16 +236,17 @@ namespace NetSerializer
 			{
 				if (typeof(System.Runtime.Serialization.IDeserializationCallback).IsAssignableFrom(type))
 				{
-                    // .NET Core does not support all GetMethod() overloads
+					// .NET Core does not support all GetMethod() overloads
+#if !NET35 && !NET40
                     var miOnDeserialization = typeof(System.Runtime.Serialization.IDeserializationCallback)
                         .GetTypeInfo().GetMethod("OnDeserialization", new[] { typeof(Object) });
-
-                    //var miOnDeserialization = typeof(System.Runtime.Serialization.IDeserializationCallback)
-                    //    .GetTypeInfo().GetMethod("OnDeserialization",
-                    //                        BindingFlags.Instance | BindingFlags.Public,
-                    //                        null, new[] { typeof(Object) }, null);
-
-                    il.Emit(OpCodes.Ldarg_2);
+#else
+					var miOnDeserialization = typeof(System.Runtime.Serialization.IDeserializationCallback)
+					    .GetMethod("OnDeserialization",
+					                        BindingFlags.Instance | BindingFlags.Public,
+					                        null, new[] { typeof(Object) }, null);
+#endif
+					il.Emit(OpCodes.Ldarg_2);
 					il.Emit(OpCodes.Ldnull);
 					il.Emit(OpCodes.Constrained, type);
 					il.Emit(OpCodes.Callvirt, miOnDeserialization);
