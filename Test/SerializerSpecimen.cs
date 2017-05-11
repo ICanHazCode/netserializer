@@ -81,10 +81,15 @@ namespace Test
 		{
 			if (direct)
 				return false;
-
+#if !NET35 && !NET40
 			if (type.GetTypeInfo().IsPrimitive || type == typeof(Guid))
 				return true;
 			return type.GetTypeInfo().GetCustomAttributes(typeof(PB.ProtoContractAttribute), false).Any();
+#else
+			if (type.IsPrimitive || type == typeof(Guid))
+				return true;
+			return type.GetCustomAttributes(typeof(PB.ProtoContractAttribute), false).Any();
+#endif
 		}
 
 		public void Warmup<T>(T[] msgs)

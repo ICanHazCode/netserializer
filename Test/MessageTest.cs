@@ -46,7 +46,9 @@ namespace Test
 				msgs[i] = m_creator(r);
 			m_messages = msgs;
 
-			Console.WriteLine("== {0} {1} x {2}{3} ==", m_numMessages, typeof(T).Name, m_loops, m_direct ? " (direct)" : "");
+			Console.WriteLine("\n## {0} {1} x {2}{3} ", m_numMessages, typeof(T).Name, m_loops, m_direct ? " (direct)" : "");
+			Console.WriteLine("|  Serializer   |          Test          |  time (ms)  |    GC coll.   |   size (B)  |");
+			Console.WriteLine("| --------------| -----------------------| ------------| --------------| ------------|");
 		}
 
 		public void Unprepare()
@@ -72,7 +74,7 @@ namespace Test
 
 			/* Serialize part */
 			{
-				Console.Write("{0,-13} | {1,-21} | ", test.Specimen.Name, "MemStream Serialize");
+				Console.Write("|{0,-14} | {1,-22} | ", test.Specimen.Name, "MemStream Serialize");
 				Console.Out.Flush();
 
 				GC.Collect();
@@ -95,7 +97,7 @@ namespace Test
 				c1 = GC.CollectionCount(1) - c1;
 				c2 = GC.CollectionCount(2) - c2;
 
-				Console.WriteLine("{0,10} | {1,4} {2,3} {3,3} | {4,10} |", sw.ElapsedMilliseconds, c0, c1, c2, size);
+				Console.WriteLine("{0,11} | {1,4} {2,3} {3,4} | {4,11} |", sw.ElapsedMilliseconds, c0, c1, c2, size);
 			}
 
 			/* Deserialize part */
@@ -103,7 +105,7 @@ namespace Test
 			{
 				var received = new T[msgs.Length];
 
-				Console.Write("{0,-13} | {1,-21} | ", test.Specimen.Name, "MemStream Deserialize");
+				Console.Write("|{0,-14} | {1,-22} | ", test.Specimen.Name, "MemStream Deserialize");
 				Console.Out.Flush();
 
 				GC.Collect();
@@ -125,7 +127,7 @@ namespace Test
 				c1 = GC.CollectionCount(1) - c1;
 				c2 = GC.CollectionCount(2) - c2;
 
-				Console.WriteLine("{0,10} | {1,4} {2,3} {3,3} | {4,10} |", sw.ElapsedMilliseconds, c0, c1, c2, "");
+				Console.WriteLine("{0,11} | {1,4} {2,3} {3,4} | {4,11} |", sw.ElapsedMilliseconds, c0, c1, c2, "");
 
 				if (Program.EnableResultCheck)
 					CompareMessages(msgs, received);
@@ -136,7 +138,7 @@ namespace Test
 		{
 			test.Prepare(msgs.Length);
 
-			Console.Write("{0,-13} | {1,-21} | ", test.Specimen.Name, "NetTest");
+			Console.Write("|{0,-14} | {1,-22} | ", test.Specimen.Name, "NetTest");
 			Console.Out.Flush();
 
 			GC.Collect();
@@ -157,7 +159,7 @@ namespace Test
 			c1 = GC.CollectionCount(1) - c1;
 			c2 = GC.CollectionCount(2) - c2;
 
-			Console.WriteLine("{0,10} | {1,4} {2,3} {3,3} | {4,10} |", sw.ElapsedMilliseconds, c0, c1, c2, "");
+			Console.WriteLine("{0,11} | {1,4} {2,3} {3,4} | {4,11} |", sw.ElapsedMilliseconds, c0, c1, c2, "");
 
 			if (Program.EnableResultCheck)
 				CompareMessages(msgs, received);

@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp1.1;net452</TargetFrameworks>
+    <TargetFrameworks>netcoreapp1.1;net35;net40;net45;net452;net46;net462</TargetFrameworks>
     <OutputType>exe</OutputType>
     <OutputTypeEx>exe</OutputTypeEx>
   </PropertyGroup>

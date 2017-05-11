@@ -11,9 +11,9 @@ namespace Test
 {
 	static class Program
 	{
-		internal static bool RunProtoBufTests = false;
+		internal static bool RunProtoBufTests = true;
 		internal static bool QuickRun = false;
-		internal static bool EnableResultCheck = false;
+		internal static bool EnableResultCheck = true;
 
 		static int NumThreads = 1;
 		static bool ShareSerializer = false;
@@ -45,8 +45,8 @@ namespace Test
 
 		static bool ParseArgs(string[] args)
 		{
+#if !NET35 && !NET40
 			bool show_help = false;
-
 			var p = new Mono.Options.OptionSet() {
 				{ "q|quick", "quick run", _ => QuickRun = true },
 				{ "p|protobuf", "run protobuf tests", _ => RunProtoBufTests = true },
@@ -73,7 +73,7 @@ namespace Test
 				p.WriteOptionDescriptions(Console.Out);
 				return false;
 			}
-
+#endif
 			return true;
 		}
 

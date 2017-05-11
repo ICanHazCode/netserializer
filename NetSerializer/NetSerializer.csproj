@@ -26,12 +26,14 @@ Forked from Lokad/netserializer with modifications for netcoreapp1.1</Descriptio
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <PackageConfiguration>Debug</PackageConfiguration>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <IncludeSymbols>true</IncludeSymbols>
     <Optimize>true</Optimize>
     <DefineConstants>TRACE</DefineConstants>
+    <PackageConfiguration>Release</PackageConfiguration>
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp1.1' ">
